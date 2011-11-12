@@ -1,70 +1,72 @@
 # Inspector
 
-inspector |inˈspektər| - noun -  an official employed to ensure that official regulations are obeyed.
+> inspector [inˈspektər] - noun -  an official employed to ensure that official regulations are obeyed.
 
-Inspector is you easy to use validations handler for any of your PHP applications. Inspector is easy to use and easy to learn more rules to impose on the data.
+Inspector is your validations handler for PHP applications. Inspector is easy to use and easy to learn and imposes rules on the information supplied.
 
 ## Validaton examples
 
 ### Valid data
 
-	// Example data that should be valid
-    $data = array("username" => "simon", "email" => "simon@localhost.local", "password" => "secret", "password_confirmation" => "secret");
+```// Example data that should be valid
+$data = array("username" => "simon", "email" => "simon@localhost.local", "password" => "secret", "password_confirmation" => "secret");
 
-	// Create a new instance of inspector
-	$inspector = new Inspector($data);
+// Create a new instance of inspector
+$inspector = new Inspector($data);
 
-	// Ensure that the data is valid
-	$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
+// Ensure that the data is valid
+$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
 
-	$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
+$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
 
-	$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
+$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
 
-	echo $inspector->hasErrors(); // Returns false
+echo $inspector->hasErrors(); // Returns false
+```
 
 ### Invalid data
 
-	// Example data that should be valid
-    $data = array("username" => "s", "email" => "simon@--", "password" => "s", "password_confirmation" => "b");
+```// Example data that should be valid
+$data = array("username" => "s", "email" => "simon@--", "password" => "s", "password_confirmation" => "b");
 
-	// Create a new instance of inspector
-	$inspector = new Inspector($data);
+// Create a new instance of inspector
+$inspector = new Inspector($data);
 
-	// Ensure that the data is valid
-	$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
+// Ensure that the data is valid
+$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
 
-	$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
+$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
 
-	$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
+$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
 
-	echo $inspector->hasErrors(); // Returns true
+echo $inspector->hasErrors(); // Returns true
 
-	print_r($inspector->errors());
+print_r($inspector->errors());
 
-	/*
-	Array
-	(
-    	[username] => Array
-        	(
-            	[0] => Username is to short
-        	)
-		[email] => Array
-			(
-				[0] => E-mail is not valid
-			)
-		[password] => Array
-			(
-				[0] => Passwords don't correspond
-				[1] => Password is to short
-			)
+/*
+Array
+(
+    [username] => Array
+        (
+            [0] => Username is to short
+        )
+  [email] => Array
+    (
+      [0] => E-mail is not valid
+    )
+  [password] => Array
+    (
+      [0] => Passwords don't correspond
+      [1] => Password is to short
+    )
 
-	)
-	*/
+)
+*/
 
-	// If you like you can throw an InspectorException
-	
-	$inspector->fuck(); // InspectorException
+// If you like you can throw an InspectorException
+
+$inspector->fuck(); // InspectorException
+```
 
 ## License
 
