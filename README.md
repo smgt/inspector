@@ -11,17 +11,29 @@ Inspector is your validations handler for PHP applications. Inspector is easy to
 ```php
 <?php
 // Example data that should be valid
-$data = array("username" => "simon", "email" => "simon@localhost.local", "password" => "secret", "password_confirmation" => "secret");
+$data = array(
+  "username" => "simon",
+  "email" => "simon@localhost.local",
+  "password" => "secret",
+  "password_confirmation" => "secret"
+);
 
 // Create a new instance of inspector
 $inspector = new Inspector($data);
 
 // Ensure that the data is valid
-$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
+$inspector->ensure("username")
+  ->isAlpha("is not only alpha characters")
+  ->isMin(3, "is to short")
+  ->isMax(10, "is to long");
 
-$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
+$inspector->ensure("email")
+  ->isValidEmail("is not valid")
+  ->notNull("is empty");
 
-$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
+$inspector->ensure("password")
+  ->isSame("password_confirmation", "don't correspond")
+  ->isMin(6, "is to short");
 
 echo $inspector->hasErrors(); // Returns false
 
@@ -33,17 +45,29 @@ echo $inspector->
 ```php
 <?php
 // Example data that should be valid
-$data = array("username" => "s", "email" => "simon@--", "password" => "s", "password_confirmation" => "b");
+$data = array(
+  "username" => "s",
+  "email" => "simon@--",
+  "password" => "s",
+  "password_confirmation" => "b"
+);
 
 // Create a new instance of inspector
 $inspector = new Inspector($data);
 
 // Ensure that the data is valid
-$inspector->ensure("username")->isAlpha("Wired characters in username")->isMin(3, "Username is to short")->isMax("Username is to long");
+$inspector->ensure("username")
+  ->isAlpha("is not only alpha characters")
+  ->isMin(3, "is to short")
+  ->isMax(10, "is to long");
 
-$inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You need to supply an email");
+$inspector->ensure("email")
+  ->isValidEmail("is not valid")
+  ->notNull("can not be empty");
 
-$inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
+$inspector->ensure("password")
+  ->isSame("password_confirmation", "don't correspond")
+  ->isMin(6, "is to short");
 
 echo $inspector->hasErrors(); // Returns true
 
@@ -54,16 +78,16 @@ Array
 (
     [username] => Array
         (
-            [0] => Username is to short
+            [0] => is to short
         )
   [email] => Array
     (
-      [0] => E-mail is not valid
+      [0] => is not valid
     )
   [password] => Array
     (
-      [0] => Passwords don't correspond
-      [1] => Password is to short
+      [0] => don't correspond
+      [1] => is to short
     )
 
 )
