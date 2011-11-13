@@ -104,19 +104,19 @@ $inspector->validate(); // InspectorException
 Inspector comes loaded with a few default validators.
 
 ```
-isNull() / notNull()                   - Check if payload is null
-isMax($int) / notMax($int)             - Check length of string
-isMin($int) / notMin($int)             - Check length of string
-isFloat() / notFloat()                 - Check if payload is float
-isInt() / notInt()                     - Check if payload is int
-isUrl() / notUrl()                     - Check if payload is URL
-isEmail() / notEmail()                 - Check if payload is an e-mail
-isIp() / notIp()                       - Check if payload is a valid ip
-isAlnum() / notAlnum()                 - Check if payload is alphanumeric
-isInside($needle) / notInside($needle) - Check if $needle exists in payload
-isSame($needle) / notSame($needle)     - Check if $needle is exactly the same as payload
-isRegex($regex) / notRegex($regex)     - Check if $regex matches payload
-isChars($chars) / notChars($chars)     - Check if $chars exist inside string
+isNull() / notNull()                     - Check if payload is null
+isMax($int) / notMax($int)               - Check length of string
+isMin($int) / notMin($int)               - Check length of string
+isFloat() / notFloat()                   - Check if payload is a float
+isInt() / notInt()                       - Check if payload is a int
+isUrl() / notUrl()                       - Check if payload is a URL
+isEmail() / notEmail()                   - Check if payload is a e-mail
+isIp() / notIp()                         - Check if payload is a valid ip
+isAlnum() / notAlnum()                   - Check if payload is alphanumeric
+contains($needle) / notContains($needle) - Check if $needle exists in payload
+isSameAs($needle) / notSameAs($needle)   - Check if $needle is exactly the same as payload
+isRegex($regex) / notRegex($regex)       - Check if $regex matches payload
+isChars($chars) / notChars($chars)       - Check if $chars exist inside string
 ```
 
 ## Add your own validator
