@@ -132,24 +132,24 @@ with optional arguments.
 ```php
 <?php
 
-    Inspector::addValidator("ninja", function($str) {
-      return strpos($str, "ninja") !== false;
-    });
+Inspector::addValidator("ninja", function($str) {
+  return strpos($str, "ninja") !== false;
+});
 
-    $inspector = new Inspector(array(
-      "name" => "Inspector 'ninja' Gadget",
-      "email" => "inspector.gadget@localhost"
-    ));
-    
-    // Check that "ninja" is present
-    $inspector->ensure("name")->isNinja("ninja is missing");
-    
-    // Check that "ninja" is present (same as isNinja)
-    $inspector->ensure("name")->ninja("ninja is missing");
-    
-    // Check that "ninja" is not present
-    $inspector->ensure("email")->notNinja("ninja is present");
-    $inspector->hasErrors(); // False
+$inspector = new Inspector(array(
+  "name" => "Inspector 'ninja' Gadget",
+  "email" => "inspector.gadget@localhost"
+));
+
+// Check that "ninja" is present
+$inspector->ensure("name")->isNinja("ninja is missing");
+
+// Check that "ninja" is present (same as isNinja)
+$inspector->ensure("name")->ninja("ninja is missing");
+
+// Check that "ninja" is not present
+$inspector->ensure("email")->notNinja("ninja is present");
+$inspector->hasErrors(); // False
 ```
 
 ## License
