@@ -8,7 +8,8 @@ Inspector is your validations handler for PHP applications. Inspector is easy to
 
 ### Valid data
 
-```<?php
+```php
+<?php
 // Example data that should be valid
 $data = array("username" => "simon", "email" => "simon@localhost.local", "password" => "secret", "password_confirmation" => "secret");
 
@@ -29,7 +30,8 @@ echo $inspector->
 
 ### Invalid data
 
-```<?php
+```php
+<?php
 // Example data that should be valid
 $data = array("username" => "s", "email" => "simon@--", "password" => "s", "password_confirmation" => "b");
 
@@ -102,7 +104,7 @@ getting tested. The error message argument is added automagically. There
 is a small ceavat when doing it this way. You can't create validators
 with optional arguments. 
 
-```
+```php
 <?php
 
     Inspector::addValidator("ninja", function($str) {
