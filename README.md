@@ -2,15 +2,15 @@
 
 > inspector [inˈspektər] - noun -  an official employed to ensure that official regulations are obeyed.
 
-Inspector is your validations handler for PHP applications. Inspector is easy to use and easy to learn and imposes rules on the information supplied.
+Inspector is your validations handler for PHP applications. Inspector is easy to use and easy to learn and imposes rules on the payload supplied.
 
 ## Validaton examples
 
-### Valid data
+### Valid payload
 
 ```php
 <?php
-// Example data that should be valid
+// Example payload that is
 $data = array(
   "username" => "simon",
   "email" => "simon@localhost.local",
@@ -35,16 +35,18 @@ $inspector->ensure("password")
   ->isSame("password_confirmation", "don't correspond")
   ->isMin(6, "is to short");
 
+// Check if any errors exist
 echo $inspector->hasErrors(); // Returns false
 
-echo $inspector->
+// Throw a exception if there are errors
+$inspector->validate(); // Returns false
 ```
 
-### Invalid data
+### Invalid payload
 
 ```php
 <?php
-// Example data that should be valid
+// Example payload that is valid
 $data = array(
   "username" => "s",
   "email" => "simon@--",
@@ -76,10 +78,10 @@ print_r($inspector->errors());
 /*
 Array
 (
-    [username] => Array
-        (
-            [0] => is to short
-        )
+  [username] => Array
+    (
+      [0] => is to short
+    )
   [email] => Array
     (
       [0] => is not valid
@@ -89,13 +91,12 @@ Array
       [0] => don't correspond
       [1] => is to short
     )
-
 )
 */
 
 // If you like you can throw an InspectorException
 
-$inspector->fuck(); // InspectorException
+$inspector->validate(); // InspectorException
 ```
 
 ## Available validations
@@ -121,7 +122,7 @@ isChars($chars) / notChars($chars)     - Check if $chars exist inside string
 ## Add your own validator
 
 It's easy to add your own validators to Inspector. Below I added a
-validator to check if the payload contains ninja. You don't need to
+validator to check if the payload contains _ninja_. You don't need to
 specify ```is```/```not``` when you add validators, they gets added
 magically. Also notice the number of arguments, ```$str``` is the string
 getting tested. The error message argument is added automagically. There
