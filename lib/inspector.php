@@ -9,32 +9,31 @@ class Inspector {
   protected $_string = null;
   protected $_key = null;
   protected $_errors = null;
-  protected $_error_msg = null;
+  protected $_error_default_msg = null;
 
-  public function __construct($substance, $error_msg=null) {
-    
-    static::addDefault();
+  public function __construct($substance, $error_default_msg=null) {
+    static::addDefaultMethods();
     $this->_substance = $substance;
-    $this->_error_msg = $error_msg;
+    $this->_error_default_msg = $error_default_msg;
   }
 
-  public function ensure($key_or_string, $error_msg=null) {
+  public function ensure($key_or_string, $error_default_msg=null) {
     if(!empty($this->_substance)) {
       $this->_string = $this->_substance[$key_or_string]; 
       $this->_key = $key_or_string;
-      $this->_error_msg = $error_msg;
+      $this->_error_default_msg = $error_default_msg;
     }
     return $this;
   }
 
-  public static function addDefault() {
+  public static function addValidator($method, $callback) {
+        static::$_methods[strtolower($method)] = $callback;
+  }
+
+  public static function addDefaultMethods() {
       static::$_methods['null'] = function($str) {
         return $str === null || $str === '';
       };
-      /* static::$_methods['len'] = function($str, $min, $max = null) { */
-      /*     $len = strlen($str); */
-      /*     return null === $max ? $len === $min : $len >= $min && $len <= $max; */
-      /* }; */
       static::$_methods['max'] = function($str, $max) {
           $len = strlen($str);
           return $len <= $max;
@@ -67,14 +66,14 @@ class Inspector {
       static::$_methods['contains'] = function($str, $needle) {
           return strpos($str, $needle) !== false;
       };
-      static::$_methods['same'] = function($str) {
-          return (strcmp("asdf", "asdf") === 0);
+      static::$_methods['sameas'] = function($str, $needle) {
+          return (strcmp($str, $needle) === 0);
       };
       static::$_methods['regex'] = function($str, $pattern) {
           return preg_match($pattern, $str);
       };
       static::$_methods['chars'] = function($str, $chars) {
-          return preg_match("`^[$chars]++$`i", $str);
+          return preg_match("/[$chars]+/i", $str);
       };
   }
 
@@ -86,11 +85,10 @@ class Inspector {
     return $this->_errors;
   }
 
-  public function fuck() {
-    if($this->_errors) {
+  public function validate() {
+    if(!empty($this->_errors)) {
       throw new InspectorException();
     }
-    return true;
   }
 
   public function __call($method, $args) {
@@ -104,11 +102,13 @@ class Inspector {
         $validator_name = substr($method, 3);
         $reverse = true;
     }
+
     $validator_name = strtolower($validator_name);
 
     if (!$validator_name || !isset(static::$_methods[$validator_name])) {
         throw new ErrorException("Unknown method $method()");
     }
+
     $validator = static::$_methods[$validator_name];
 
     $ref = new ReflectionFunction($validator);
@@ -116,6 +116,7 @@ class Inspector {
 
     array_unshift($args, $this->_string);
 
+    /* print "\nRunning test with ".$validator_name."\n"; */
     /* print_r($args); */
     /* echo $num_parameters." / ".sizeof($args) . "\n"; */
     if($num_parameters < sizeof($args))
@@ -140,9 +141,9 @@ class Inspector {
         $this->_errors[$this->_key] = array();
       }
 
-      if(!empty($this->_error_msg)) {
-        if(!in_array($this->_error_msg, $this->_errors[$this->_key])) {
-          $this->_errors[$this->_key][] = $this->_error_msg;
+      if(!empty($this->_error_default_msg)) {
+        if(!in_array($this->_error_default_msg, $this->_errors[$this->_key])) {
+          $this->_errors[$this->_key][] = $this->_error_default_msg;
         }
       }
 
