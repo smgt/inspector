@@ -8,7 +8,8 @@ Inspector is your validations handler for PHP applications. Inspector is easy to
 
 ### Valid data
 
-```// Example data that should be valid
+```<?php
+// Example data that should be valid
 $data = array("username" => "simon", "email" => "simon@localhost.local", "password" => "secret", "password_confirmation" => "secret");
 
 // Create a new instance of inspector
@@ -22,11 +23,14 @@ $inspector->ensure("email")->isValidEmail("E-mail is not valid")->notNull("You n
 $inspector->ensure("password")->isSame("password_confirmation", "Passwords don't correspond")->isMin(6, "Password is to short");
 
 echo $inspector->hasErrors(); // Returns false
+
+echo $inspector->
 ```
 
 ### Invalid data
 
-```// Example data that should be valid
+```<?php
+// Example data that should be valid
 $data = array("username" => "s", "email" => "simon@--", "password" => "s", "password_confirmation" => "b");
 
 // Create a new instance of inspector
@@ -66,6 +70,48 @@ Array
 // If you like you can throw an InspectorException
 
 $inspector->fuck(); // InspectorException
+```
+
+## Available validations
+
+Inspector comes loaded with a few default validators.
+
+```
+isNull() / notNull()                   - Check if payload is null
+isMax($int) / notMax($int)             - Check length of string
+isMin($int) / notMin($int)             - Check length of string
+isFloat() / notFloat()                 - Check if payload is float
+isInt() / notInt()                     - Check if payload is int
+isUrl() / notUrl()                     - Check if payload is URL
+isEmail() / notEmail()                 - Check if payload is an e-mail
+isIp() / notIp()                       - Check if payload is a valid ip
+isAlnum() / notAlnum()                 - Check if payload is alphanumeric
+isInside($needle) / notInside($needle) - Check if $needle exists in payload
+isSame($needle) / notSame($needle)     - Check if $needle is exactly the same as payload
+isRegex($regex) / notRegex($regex)     - Check if $regex matches payload
+isChars($chars) / notChars($chars)     - Check if $chars exist inside string
+```
+
+## Add your own validator
+
+It's easy to add your own validators to Inspector. Below I added a
+validator to check if the payload contains ninja. You don't need to
+specify ```is```/```not``` when you add validators, they gets added
+magically. Also notice the number of arguments, ```$str``` is the string
+getting tested. The error message argument is added automagically. There
+is a small ceavat when doing it this way. You can't create validators
+with optional arguments. 
+
+```
+<?php
+
+    Inspector::addValidator("ninja", function($str) {
+      return strpos($str, "ninja") !== false;
+    });
+
+    $inspector = new Inspector(array("name" => "Inspector 'ninja' Gadget"));
+    $inspector->ensure("name")->isNinja("ninja is missing inside");
+    $inspector->hasErrors(); // False
 ```
 
 ## License
