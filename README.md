@@ -136,8 +136,19 @@ with optional arguments.
       return strpos($str, "ninja") !== false;
     });
 
-    $inspector = new Inspector(array("name" => "Inspector 'ninja' Gadget"));
-    $inspector->ensure("name")->isNinja("ninja is missing inside");
+    $inspector = new Inspector(array(
+      "name" => "Inspector 'ninja' Gadget",
+      "email" => "inspector.gadget@localhost"
+    ));
+    
+    // Check that "ninja" is present
+    $inspector->ensure("name")->isNinja("ninja is missing");
+    
+    // Check that "ninja" is present (same as isNinja)
+    $inspector->ensure("name")->ninja("ninja is missing");
+    
+    // Check that "ninja" is not present
+    $inspector->ensure("email")->notNinja("ninja is present");
     $inspector->hasErrors(); // False
 ```
 
