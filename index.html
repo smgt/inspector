@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Inspector : A easy and extendable validation library written in PHP." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Inspector</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/simon/inspector">View on GitHub</a>
+
+          <h1 id="project_title">Inspector</h1>
+          <h2 id="project_tagline">A easy and extendable validation library written in PHP.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/simon/inspector/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/simon/inspector/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Inspector</h1>
+
+<blockquote>
+<p>inspector [inˈspektər] - noun -  an official employed to ensure that official regulations are obeyed.</p>
+</blockquote>
+
+<p>Inspector is your validations handler for PHP applications. Inspector is easy to use and easy to learn and imposes rules on the payload supplied.</p>
+
+<h2>Validaton examples</h2>
+
+<h3>Valid payload</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="c1">// Example payload that is</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+  <span class="s2">"username"</span> <span class="o">=&gt;</span> <span class="s2">"simon"</span><span class="p">,</span>
+  <span class="s2">"email"</span> <span class="o">=&gt;</span> <span class="s2">"simon@localhost.local"</span><span class="p">,</span>
+  <span class="s2">"password"</span> <span class="o">=&gt;</span> <span class="s2">"secret"</span><span class="p">,</span>
+  <span class="s2">"password_confirmation"</span> <span class="o">=&gt;</span> <span class="s2">"secret"</span>
+<span class="p">);</span>
+
+<span class="c1">// Create a new instance of inspector</span>
+<span class="nv">$inspector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Inspector</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+
+<span class="c1">// Ensure that the data is valid</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isAlpha</span><span class="p">(</span><span class="s2">"is not only alpha characters"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMin</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">"is to short"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMax</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"is to long"</span><span class="p">);</span>
+
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isValidEmail</span><span class="p">(</span><span class="s2">"is not valid"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">notNull</span><span class="p">(</span><span class="s2">"is empty"</span><span class="p">);</span>
+
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isSame</span><span class="p">(</span><span class="s2">"password_confirmation"</span><span class="p">,</span> <span class="s2">"don't correspond"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMin</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">"is to short"</span><span class="p">);</span>
+
+<span class="c1">// Check if any errors exist</span>
+<span class="k">echo</span> <span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">hasErrors</span><span class="p">();</span> <span class="c1">// Returns false</span>
+
+<span class="c1">// Throw a exception if there are errors</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">();</span> <span class="c1">// Returns false</span>
+</pre>
+</div>
+
+
+<h3>Invalid payload</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+<span class="c1">// Example payload that is valid</span>
+<span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+  <span class="s2">"username"</span> <span class="o">=&gt;</span> <span class="s2">"s"</span><span class="p">,</span>
+  <span class="s2">"email"</span> <span class="o">=&gt;</span> <span class="s2">"simon@--"</span><span class="p">,</span>
+  <span class="s2">"password"</span> <span class="o">=&gt;</span> <span class="s2">"s"</span><span class="p">,</span>
+  <span class="s2">"password_confirmation"</span> <span class="o">=&gt;</span> <span class="s2">"b"</span>
+<span class="p">);</span>
+
+<span class="c1">// Create a new instance of inspector</span>
+<span class="nv">$inspector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Inspector</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+
+<span class="c1">// Ensure that the data is valid</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isAlpha</span><span class="p">(</span><span class="s2">"is not only alpha characters"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMin</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">"is to short"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMax</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"is to long"</span><span class="p">);</span>
+
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isValidEmail</span><span class="p">(</span><span class="s2">"is not valid"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">notNull</span><span class="p">(</span><span class="s2">"can not be empty"</span><span class="p">);</span>
+
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isSame</span><span class="p">(</span><span class="s2">"password_confirmation"</span><span class="p">,</span> <span class="s2">"don't correspond"</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">isMin</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">"is to short"</span><span class="p">);</span>
+
+<span class="k">echo</span> <span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">hasErrors</span><span class="p">();</span> <span class="c1">// Returns true</span>
+
+<span class="nb">print_r</span><span class="p">(</span><span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">errors</span><span class="p">());</span>
+
+<span class="cm">/*</span>
+<span class="cm">Array</span>
+<span class="cm">(</span>
+<span class="cm">  [username] =&gt; Array</span>
+<span class="cm">    (</span>
+<span class="cm">      [0] =&gt; is to short</span>
+<span class="cm">    )</span>
+<span class="cm">  [email] =&gt; Array</span>
+<span class="cm">    (</span>
+<span class="cm">      [0] =&gt; is not valid</span>
+<span class="cm">    )</span>
+<span class="cm">  [password] =&gt; Array</span>
+<span class="cm">    (</span>
+<span class="cm">      [0] =&gt; don't correspond</span>
+<span class="cm">      [1] =&gt; is to short</span>
+<span class="cm">    )</span>
+<span class="cm">)</span>
+<span class="cm">*/</span>
+
+<span class="c1">// If you like you can throw an InspectorException</span>
+
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">();</span> <span class="c1">// InspectorException</span>
+</pre>
+</div>
+
+
+<h2>Available validations</h2>
+
+<p>Inspector comes loaded with a few default validators.</p>
+
+<pre><code>isNull() / notNull()                     - Check if payload is null
+isMax($int) / notMax($int)               - Check length of string
+isMin($int) / notMin($int)               - Check length of string
+isFloat() / notFloat()                   - Check if payload is a float
+isInt() / notInt()                       - Check if payload is a int
+isUrl() / notUrl()                       - Check if payload is a URL
+isEmail() / notEmail()                   - Check if payload is a e-mail
+isIp() / notIp()                         - Check if payload is a valid ip
+isAlnum() / notAlnum()                   - Check if payload is alphanumeric
+contains($needle) / notContains($needle) - Check if $needle exists in payload
+isSameAs($needle) / notSameAs($needle)   - Check if $needle is exactly the same as payload
+isRegex($regex) / notRegex($regex)       - Check if $regex matches payload
+isChars($chars) / notChars($chars)       - Check if $chars exist inside string
+</code></pre>
+
+<h2>Add your own validator</h2>
+
+<p>It's easy to add your own validators to Inspector. Below I added a
+validator to check if the payload contains <em>ninja</em>. You don't need to
+specify <code>is</code>/<code>not</code> when you add validators, they gets added
+magically. Also notice the number of arguments, <code>$str</code> is the string
+getting tested. The error message argument is added automagically. There
+is a small ceavat when doing it this way. You can't create validators
+with optional arguments. </p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+
+<span class="nx">Inspector</span><span class="o">::</span><span class="na">addValidator</span><span class="p">(</span><span class="s2">"ninja"</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$str</span><span class="p">,</span> <span class="s2">"ninja"</span><span class="p">)</span> <span class="o">!==</span> <span class="k">false</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$inspector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Inspector</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+  <span class="s2">"name"</span> <span class="o">=&gt;</span> <span class="s2">"Inspector 'ninja' Gadget"</span><span class="p">,</span>
+  <span class="s2">"email"</span> <span class="o">=&gt;</span> <span class="s2">"inspector.gadget@localhost"</span>
+<span class="p">));</span>
+
+<span class="c1">// Check that "ninja" is present</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">isNinja</span><span class="p">(</span><span class="s2">"ninja is missing"</span><span class="p">);</span>
+
+<span class="c1">// Check that "ninja" is present (same as isNinja)</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">ninja</span><span class="p">(</span><span class="s2">"ninja is missing"</span><span class="p">);</span>
+
+<span class="c1">// Check that "ninja" is not present</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">ensure</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">notNinja</span><span class="p">(</span><span class="s2">"ninja is present"</span><span class="p">);</span>
+<span class="nv">$inspector</span><span class="o">-&gt;</span><span class="na">hasErrors</span><span class="p">();</span> <span class="c1">// False</span>
+</pre>
+</div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Inspector maintained by <a href="https://github.com/simon">simon</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
