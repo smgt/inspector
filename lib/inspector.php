@@ -88,6 +88,8 @@ class Inspector {
   public function validate() {
     if(!empty($this->_errors)) {
       throw new InspectorException();
+    }else{
+      return true;
     }
   }
 
