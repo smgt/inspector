@@ -39,7 +39,7 @@ $inspector->ensure("password")
 echo $inspector->hasErrors(); // Returns false
 
 // Throw a exception if there are errors
-$inspector->validate(); // Returns false
+$inspector->validate(); // Returns true
 ```
 
 ### Invalid payload
