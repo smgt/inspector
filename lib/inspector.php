@@ -1,7 +1,23 @@
 <?php
+/**
+ * Inspector 
+ *
+ * An easy and extensible validation library
+ *
+ * @package Inspector
+ * @author Simon Gate
+ * @copyright Copyright (c) 2011 - 2012
+ * @link https://github.com/simon/inspector
+ */
 
+/**
+ * Exception for Inspector class
+ */
 class InspectorException extends Exception {}
 
+/**
+ * Main Inspector class
+ */
 class Inspector {
 
   public static $_methods = array();
@@ -11,12 +27,25 @@ class Inspector {
   protected $_errors = null;
   protected $_error_default_msg = null;
 
+  /**
+   * Creates a new inspector instance
+   *
+   * @param mixed
+   * @param string
+   */
   public function __construct($substance, $error_default_msg=null) {
     static::addDefaultMethods();
     $this->_substance = $substance;
     $this->_error_default_msg = $error_default_msg;
   }
 
+  /**
+   * Creates a validation ruleset
+   *
+   * @param string
+   * @param string
+   * @return $this
+   */
   public function ensure($key_or_string, $error_default_msg=null) {
     if(!empty($this->_substance)) {
       $this->_string = $this->_substance[$key_or_string]; 
@@ -26,10 +55,19 @@ class Inspector {
     return $this;
   }
 
+  /**
+   * Adds a custom validation method
+   *
+   * @param string
+   * @param callable
+   */
   public static function addValidator($method, $callback) {
         static::$_methods[strtolower($method)] = $callback;
   }
 
+  /**
+   * Adds default validation rules
+   */
   public static function addDefaultMethods() {
       static::$_methods['null'] = function($str) {
         return $str === null || $str === '';
@@ -76,15 +114,30 @@ class Inspector {
           return preg_match("/[$chars]+/i", $str);
       };
   }
-
+  
+  /**
+   * Checks if there are validation errors
+   *
+   * @return bool
+   */
   public function hasErrors() {
     return !empty($this->_errors);
   }
 
+  /**
+   * Returns list of validation errors
+   *
+   * @return array
+   */
   public function errors() {
     return $this->_errors;
   }
 
+  /**
+   * Throw an exception if errors exist
+   *
+   * @return mixed
+   */
   public function validate() {
     if(!empty($this->_errors)) {
       throw new InspectorException();
@@ -93,6 +146,13 @@ class Inspector {
     }
   }
 
+  /**
+   * Method to simplify calling validation methods
+   *
+   * @param mixed
+   * @param array
+   * @return mixed
+   */
   public function __call($method, $args) {
     $reverse = false;
     $validator_name = $method;
@@ -127,13 +187,7 @@ class Inspector {
     }
     /* print_r($args); */
 
-    switch (count($args)) {
-        case 1:  $result = $validator($args[0]); break;
-        case 2:  $result = $validator($args[0], $args[1]); break;
-        case 3:  $result = $validator($args[0], $args[1], $args[2]); break;
-        case 4:  $result = $validator($args[0], $args[1], $args[2], $args[3]); break;
-        default: $result = call_user_func_array($validator, $args); break;
-    }
+    $result = call_user_func_array($validator, $args);
 
     $result = (bool)($result ^ $reverse);
 
